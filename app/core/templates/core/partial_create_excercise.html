@@ -1,0 +1,37 @@
+{% load widget_tweaks %}
+
+<form method="post" action="{% url 'create-excercise' workout.id%}" class="js-excercise-create-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Create a new excercise</h4>
+  </div>
+  <div class="modal-body">
+              <label for="excercise_name">Choose an excercise:</label>
+
+          <select id="excercise_name" name="excercise_name" class="form__group form__group">
+
+
+          {% for related_excercise in related_excercises %}
+            <option id="option" type="option" name="option" >{{related_excercise}}</option>
+          {% endfor %}
+          </select>
+
+    {% for field in form %}
+      <div class="form-group">
+
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% render_field field class="form-control" %}
+        {% for error in field.errors %}
+          <p class="help-block">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary">Create excercise</button>
+  </div>
+</form>

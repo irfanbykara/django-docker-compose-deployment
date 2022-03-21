@@ -1,0 +1,53 @@
+
+{% if workouts %}
+        {% for workout in workouts %}
+
+          <div class="roomListRoom">
+            <div class="roomListRoom__header">
+              <a href="#" class="roomListRoom__author">
+                <div class="avatar avatar--small">
+                  <img src="{{request.user.profile.avatar.url}}" />
+                </div>
+                <span>@{{request.user.username}}</span>
+              </a>
+              <div class="roomListRoom__actions">
+                <span>{{workout.date.day}}.{{workout.date.month}}.{{workout.date.year}}</span>
+              </div>
+            </div>
+            <div class="roomListRoom__content">
+              <a href="{% url 'workout-main' workout.id %}">{{workout.name}}</a>
+              <p>There are 
+                {{workout.excercise_set.count}} excercise added to this workout.             </p>
+            </div>
+            <div class="roomListRoom__meta">
+              <a href="{% url 'workout-page' workout.id %}" class="roomListRoom__joined">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                  <title>user-group</title>
+                  <path
+                  d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                  ></path>
+                  <path
+                  d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                  ></path>
+                  <path
+                  d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                  ></path>
+                  <path
+                  d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                  ></path>
+                </svg>
+
+              </a>
+
+              <p class="roomListRoom__topic">{{workout.category|title}}</p>
+            </div>
+          </div>
+          <br>
+                {% endfor %}
+{% else %}
+<h2 style="color:white; text-align:center">Opps, no workout found for selected day.</h2>
+                {% endif %}
+
+
+
+

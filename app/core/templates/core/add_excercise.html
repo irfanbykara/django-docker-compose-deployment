@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="create-room layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader" style="color:white;">
+        <div class="layout__boxTitle" >
+          <a href="{{request.META.HTTP_REFERER}}">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <title >arrow-left</title>
+              <path
+                d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">
+              </path>
+            </svg>
+          </a>
+          <h3>Create/Update Workout</h3>
+
+        </div>
+      </div>
+      <div class="layout__body">
+                  {% if page == 'create_excercise' %}
+
+         <a href="{% url 'add-custom-excercise' workout.id %}">add
+          <svg class="svg-icon" viewBox="0 0 20 20">
+							<path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
+						</svg>
+          </a>
+        {% endif %}
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
+          {% if page == 'create_excercise' %}
+          <label for="excercise_name">Choose an excercise:</label>
+
+          <select id="excercise_name" name="excercise_name" class="form__group form__group">
+
+
+          {% for related_excercise in related_excercises %}
+            <option id="option" type="option" name="option" >{{related_excercise}}</option>
+          {% endfor %}
+          </select>
+
+          {% for field in form %}
+          <div class="form__group form__group">
+            <label for="room_name">{{field.label}}</label>
+            {{field}}
+          </div>
+          {% endfor %}
+          {% else %}
+           {% for field in form %}
+          <div class="form__group form__group">
+            <label for="room_name">{{field.label}}</label>
+            {{field}}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          
+
+
+
+          <button class="btn btn--main" type="submit">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <title>lock</title>
+              <path
+                d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z">
+              </path>
+              <path
+                d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z">
+              </path>
+            </svg>
+
+            Register
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}

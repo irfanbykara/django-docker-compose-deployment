@@ -1,0 +1,61 @@
+                            {% if workouts %}
+                                <div class="preview-thumbnail">
+                              <div class="preview-icon bg-primary">
+                                <i class="mdi mdi-file-document"></i>
+                              </div>
+                            </div>
+                       {% for workout in workouts %}
+                            <div class="preview-item-content d-sm-flex flex-grow">
+                              <div class="flex-grow">
+                                <a href="{% url 'workout-detail' workout.id %}" style="color: white; text-decoration: none;"><h6 class="preview-subject">{{workout.name}}</h6></a>
+                                <p class="text-muted mb-0">{{workout.category|title}}</p>
+                              </div>
+                              <div class="mr-auto text-sm-right pt-2 pt-sm-0" >
+                                <p class="text-muted">{{workout.date.day}}.{{workout.date.month}}.{{workout.date.year}}</p>
+                                <p class="text-muted mb-0"> {{workout.excercise_set.count}} excercise added to this workout. </p>
+
+                              </div>
+                                <div class="mr-auto text-sm-right pt-2 pt-sm-0" >
+                                                              <button class=" btn btn-outline-danger btn-fw" id="notificationDropdown" style="margin-left:1vw;" data-toggle="modal" data-target="#deleteWorkoutModal{{workout.id}}">Delete
+                </button>
+                                </div>
+                              <div class="modal fade"  id="deleteWorkoutModal{{workout.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{workout.id}}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered" role="document" >
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteWorkoutModalLabel">Delete Workout</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>Are you sure to delete {{workout.name}}?</p>
+                                  </div>
+                                        <div class="modal-footer">
+                                          <form method="POST" action="/delete-workout/{{workout.id}}">
+                                                      {% csrf_token %}
+
+                                                    <button type="submit" class="btn btn-danger btn-fw">Delete</button>
+        <button type="button" class="btn btn-primary btn-fw" data-dismiss="modal">Close</button>
+
+                                          </form>
+      </div>
+
+
+                                </div>
+                              </div>
+                            </div>
+
+
+                            </div>
+                          </div>
+                          <div class="preview-item border-bottom">
+                            <div class="preview-thumbnail">
+                              <div class="preview-icon bg-success">
+                                <i class="mdi mdi-cloud-download"></i>
+                              </div>
+                            </div>
+                            {%  endfor %}
+                            {% else %}
+                              <center><h4>Opps, no workout found.</h4></center>
+                            {% endif %}
