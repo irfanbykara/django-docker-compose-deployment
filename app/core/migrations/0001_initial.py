@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200)),
                 ('rep', models.IntegerField()),
                 ('weight', models.IntegerField()),
-                ('workout', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.workout')),
+                ('workout', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.workout')),
             ],
         ),
     ]

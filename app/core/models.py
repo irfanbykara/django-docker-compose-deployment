@@ -53,7 +53,7 @@ class Excercise(models.Model):
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
     rep = models.IntegerField()
     weight = models.IntegerField()
-    
+
     def __str__(self):
         return self.name
 

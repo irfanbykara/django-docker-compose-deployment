@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .forms import ExcerciseForm, MyUserCreationForm, WorkoutForm, ProfileForm, CustomExcerciseForm
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages 
+from django.contrib import messages
 from .models import Excercise, Profile, User,Workout,CustomExcercise
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -71,7 +71,6 @@ def home(request):
         context = {'workouts':workouts}
         return render(request,'core/home_template.html',context)
 
-        
 def create_workout(request):
     data = dict()
     if request.method == 'POST':
@@ -137,6 +136,7 @@ def login_page(request):
         else:
             messages.error(request, 'Username or password is wrong.')
     return render(request,'core/login_register_template.html',context)
+      return HttpResponse('Hello World...')
 
 def logout_user(request):
     logout(request)
@@ -181,7 +181,7 @@ def workout_page(request,pk):
             weight = request.POST.get('weight'),
             workout = Workout.objects.get(id=pk)
         )
-        
+
         return redirect( 'workout-main',pk=pk )
 
     page = 'create_excercise'
