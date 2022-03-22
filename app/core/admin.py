@@ -1,5 +1,13 @@
 from django.contrib import admin
-from core.models import Sample
-# Register your models here.
+from .models import Excercise, Profile,User,Workout,CustomExcercise
 
-admin.site.register(Sample)
+# Register your models here.
+# admin.site.register(User)
+admin.site.register(Profile)
+admin.site.register(Workout)
+admin.site.register(Excercise)
+admin.site.register(CustomExcercise)
+
+
+
+
