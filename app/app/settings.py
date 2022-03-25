@@ -20,26 +20,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-o=q++$)y&73c!i_5c)69l3z3b&t_pgs!=^2hq9#jf2!ik55blk'
-#
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-#
-# ALLOWED_HOSTS = []
-
-SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-o=q++$)y&73c!i_5c)69l3z3b&t_pgs!=^2hq9#jf2!ik55blk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+DEBUG = True
 
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get('ALLOWED_HOSTS', '').split(','),
-    )
-)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+#
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+#
+# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS.extend(
+#     filter(
+#         None,
+#         os.environ.get('ALLOWED_HOSTS', '').split(','),
+#     )
+# )
 
 
 
@@ -90,22 +90,22 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST': os.environ.get('DB_HOST'),
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 
 # Password validation

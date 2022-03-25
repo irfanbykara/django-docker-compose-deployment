@@ -23,7 +23,7 @@
       <div class="layout__body" >
         <center>
         <div class="preview-thumbnail" >
-                          <img src="{{request.user.profile.avatar.url}}" alt="image" class="rounded-circle" style="height:150px;width:150px;">
+                          <img src="{{request.user.profile.avatar.url}}" onerror="if (this.src != 'error.jpg') this.src = '{% static 'images/avatar.svg' %}';" alt="image" class="rounded-circle" style="height:150px;width:150px;">
                         </div>
 
           </center>
