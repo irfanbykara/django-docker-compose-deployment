@@ -200,9 +200,12 @@ def workout_page(request, pk):
     related_excercises = get_excercise_categories( user=request.user, category=workout.category )[workout.category]
     context = {'form': form, 'related_excercises': related_excercises, 'page': page, 'workout': workout}
 
-    return render( request, 'core/workout_detail_template.html',
-                   context
-                   )
+    try:
+        return render( request, 'core/workout_detail_template.html',
+                       context
+                       )
+    except Exception as e:
+        return HttpResponse(e)
 
 
 def workout_main(request, pk):
@@ -253,7 +256,10 @@ def workout_detail(request, pk):
                'bmi_change': bmi_change,
                'bmi_change_bool': bmi_change_bool,
                'page': page}
-    return render(request, 'core/workout_detail_template.html', context )
+    try:
+        return render(request, 'core/workout_detail_template.html', context )
+    except Exception as e:
+        return HttpResponse(e)
 
 
 @login_required
