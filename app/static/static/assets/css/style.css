@@ -12260,6 +12260,7 @@ a.close.disabled {
 .modal-dialog {
   position: relative;
   width: auto;
+  vertical-align:middle;
   margin: 10px;
   pointer-events: none; }
   .modal.fade .modal-dialog {
@@ -12288,6 +12289,7 @@ a.close.disabled {
 .modal-dialog-centered {
   display: flex;
   align-items: center;
+  vertical-align:middle;
   min-height: calc(100% - 20px); }
   .modal-dialog-centered::before {
     display: block;
