@@ -1,49 +1,45 @@
 {% extends 'main.html' %}
-
+{% load static %}
 {% block content %}
-<main class="profile-page layout layout--3">
-  <div class="container">
-    <!-- Topics Start -->
-    {% include 'base/topics_componet.html' %}
-    <!-- Topics End -->
 
-    <!-- Room List Start -->
-    <div class="roomList">
-      <div class="profile">
-        <div class="profile__avatar">
-          <div class="avatar avatar--large active">
-            <img src="{{user.avatar.url}}" />
+
+<main class="update-account layout">
+  <div class="card">
+    <div class="layout__box" style="margin-left:10vw;margin-right:10vw;margin-top:5vh;margin-bottom:5vh;">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Edit your profile</h3>
+        </div>
+      </div>
+
+      <div class="layout__body" >
+        <center>
+        <div class="preview-thumbnail" >
+                          <img src="{{request.user.profile.avatar.url}}" onerror="if (this.src != 'error.jpg') this.src = '{% static 'images/avatar.svg' %}';" alt="image" class="rounded-circle" style="height:150px;width:150px;">
+                        </div>
+
+          </center>
+        <form class="form" action="" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% for field in form %}
+          <div class="form__group">
+            <label for="profile_pic" value={{field.label}}>{{field.label}}</label>
+            {{field}}
           </div>
-        </div>
-        <div class="profile__info">
-          <h3>{{user.name}}</h3>
-          <p>@{{user.username}}</p>
-          {% if request.user == user %}
-          <a href="{% url 'update-user' %}" class="btn btn--main btn--pill">Edit Profile</a>
-          {% endif %}
-        </div>
-        <div class="profile__about">
-          <h3>About</h3>
-          <p>
-            {{user.bio}}
-          </p>
-        </div>
+          {% endfor %}
+
+
+          <center>
+            <div class="form__action">
+            <button class="btn btn-primary" type="submit">Update</button>
+          </div>
+          </center>
+        </form>
       </div>
-
-      <div class="roomList__header">
-        <div>
-          <h2>Study Rooms Hosted by {{user.username}}</a>
-          </h2>
-        </div>
-      </div>
-      {% include 'base/feed_component.html' %}
-
-
     </div>
-    <!-- Room List End -->
-
-    <!-- Activities Start -->
-    <!-- Activities End -->
   </div>
+
 </main>
+
 {% endblock content %}

@@ -4,3 +4,14 @@ from django.apps import AppConfig
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'core'
+
+from django.apps import AppConfig
+from django.utils.translation import ugettext_lazy as _
+
+
+class AccountsConfig(AppConfig):
+    name = 'apps.accounts'
+    verbose_name = _('Accounts and Profiles')
+
+    def ready(self):
+        from . import signals

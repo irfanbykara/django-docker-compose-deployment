@@ -1,48 +1,233 @@
+
 <!DOCTYPE html>
 {% load static %}
-<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 
 <html lang="en">
-
   <head>
-
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
-
-
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Fitness Tracker</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+      <script src="https://unpkg.com/htmx.org@1.1.0"></script>
+
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   </head>
 
   <body>
+<div class="container-scroller">
 
-    {% include 'navbar.html' %}
-    {% block content %}
+    {% if request.user.is_authenticated %}
 
-    {% endblock %}
+  {% include 'sidebar.html' %}
+  {% endif %}
+  <div class="container-fluid page-body-wrapper">
+
+    {% if request.user.is_authenticated %}
+
+  {% include 'navbar.html' %}
+  {% endif %}
+        <div class="main-panel">
+
+          <div class="content-wrapper">
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{message.tags}}" role="alert">{{message}}</div>
+  {% endfor %}
+  {% endif %}
+
+                {% block content %}
 
 
-    <script src="{% static 'js/script.js' %}"></script>
+ {% endblock %}
 
-  <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+          </div>
+          <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © irfanbaykara.com 2022</span>
+              <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> For <a href="https://www.irfanbaykara.com" target="_blank">more</a> from irfanbaykara.com</span>
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
 
-<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+</div>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
 
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static 'assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'assets/js/misc.js' %}"></script>
+    <script src="{% static 'assets/js/settings.js' %}"></script>
+    <script src="{% static 'assets/js/todolist.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
+      <script src="{% static 'assets/js/chart.js' %}"></script>
+  	    <script src="{% static 'assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+
+    <script>
+
+$(function () {
+
+  /* Functions */
+
+  var loadForm = function () {
+    var btn = $(this);
+    $.ajax({
+      url: btn.attr("data-url"),
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function () {
+        $("#modal-book").modal("show");
+      },
+      success: function (data) {
+        $("#modal-book .modal-content").html(data.html_form);
+      }
+    });
+  };
+
+  var saveForm = function () {
+    var form = $(this);
+    $.ajax({
+      url: form.attr("action"),
+      data: form.serialize(),
+      type: form.attr("method"),
+      dataType: 'json',
+      success: function (data) {
+        if (data.form_is_valid) {
+          $("#excercise_table tbody").html(data.html_excercise_list);
+          $("#modal-book").modal("hide");
+        }
+        else {
+          $("#excercise_table .modal-content").html(data.html_form);
+        }
+      }
+    });
+    return false;
+  };
+
+  var saveForm2 = function () {
+    var form = $(this);
+    $.ajax({
+      url: form.attr("action"),
+      data: form.serialize(),
+      type: form.attr("method"),
+      dataType: 'json',
+      success: function (data) {
+        if (data.form_is_valid) {
+          $(".workout-table").html(data.html_excercise_list);
+          $("#modal-book").modal("hide");
+          location.reload();
+
+        }
+        else {
+          $("#workout-table .modal-content").html(data.html_form);
+        }
+      }
+    });
+    return false;
+  };
+
+
+  /* Binding */
+
+  // Create book
+
+  $(".js-create-excercise").click(loadForm);
+  $("#modal-book").on("submit", ".js-excercise-create-form", saveForm);
+
+  // Update book
+  $("#excercise_table").on("click", ".js-update-excercise", loadForm);
+  $("#modal-book").on("submit", ".js-excercise-update-form", saveForm);
+
+$("#excercise_table").on("click", ".js-delete-excercise", loadForm);
+$("#modal-book").on("submit", ".js-excercise-delete-form", saveForm);
+
+$(".js-create-workout").click(loadForm);
+$("#modal-book").on("submit", ".js-workout-create-form", saveForm2);
+
+
+});
+// Delete book
+
+</script>
   <script>
-$(document).ready(function() {
-    $("#dialog").dialog();
-});</script>
+    $(document).ready(function() {
+        // messages timeout for 10 sec
+        setTimeout(function() {
+            $('.message').fadeOut('slow');
+        }, 10000); // <-- time in milliseconds, 1000 =  1 sec
 
+        // delete message
+        $('.del-msg').live('click',function(){
+            $('.del-msg').parent().attr('style', 'display:none;');
+        })
+    });
+</script>
+<script>
+    function navigatePage(){
+
+    window.location.href = '/login/';
+
+    }
+
+    function logout(){
+    window.location.href='/logout/'
+    }
+
+    function navigateProfile(){
+    alert(x);
+    window.location.href='/profile/'+x;
+    }
+
+
+</script>
   </body>
 </html>
-
-
 
 
 

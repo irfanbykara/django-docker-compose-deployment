@@ -1,65 +1,68 @@
 {% extends 'main.html' %}
-
+{% load widget_tweaks %}
+{% load socialaccount %}
 {% block content %}
-<main class="auth layout">
 
   {% if page == 'login' %}
-  <div class="container">
-    <div class="layout__box" >
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <h3>Login</h3>
-        </div>
-      </div>
-      <div class="layout__body">
-        <h2 class="auth__tagline">Keep track of your lifts!</h2>
 
-        <form class="form" action="" method="POST">
-          {% csrf_token %}
-          <div class="form__group form__group">
-            <label for="room_name">Username</label>
-            <input id="username" name="username" type="username" placeholder="e.g:danielcraig" />
+<div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="row w-100 m-0">
+          <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+            <div class="card col-lg-4  mx-auto">
+              <div class="card-body ">
+                <h3 class="card-title text-left mb-3">Login</h3>
+
+                <form class="form" action="" method="POST">
+                    {% csrf_token %}
+                  <div class="form-group">
+                    <label>Username *</label>
+                    <input type="text" id="username" name="username" class="form-control p_input">
+                  </div>
+                  <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" name="password" id="password" class="form-control p_input">
+                  </div>
+                  <div class="form-group d-flex align-items-center justify-content-between">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" id="rememberme" name="rememberme" class="form-check-input"> Remember me </label>
+                    </div>
+                    <a href="#" class="forgot-pass">Forgot password</a>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
+                  </div>
+                  <div class="d-flex">
+                    <button class="btn btn-facebook mr-2 col">
+                      <i class="mdi mdi-facebook"></i> Facebook </button>
+                    <button class="btn btn-google col">
+                      <i class="mdi mdi-google-plus"></i> Google plus </button>
+                                      <a href="{% provider_login_url 'google' %}" class="btn btn btn-danger btn-lg btn-block" role="button" aria-pressed="true">Sign in with Google</a>
+
+                  </div>
+                  <p class="sign-up">Don't have an Account?<a href="{% url 'register' %}"> Sign Up</a></p>
+                </form>
+              </div>
+            </div>
           </div>
-          <div class=" form__group">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password"
-              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
-          </div>
-
-          <button class="btn btn--main" type="submit" style="align-items:center; display:flex;">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-              <title>lock</title>
-              <path
-                d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z">
-              </path>
-              <path
-                d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z">
-              </path>
-            </svg>
-
-            Login
-          </button>
-        </form>
-
-        <div class="auth__action">
-          <p>Haven't signed up yet?</p>
-          <a href="{% url 'register' %}" class="btn btn--link">Sign Up</a>
+          <!-- content-wrapper ends -->
         </div>
+        <!-- row ends -->
       </div>
+      <!-- page-body-wrapper ends -->
     </div>
-  </div>
-  {% else %}
-  <div class="container">
-    <div class="layout__box">
-      <div class="layout__boxHeader">
-        <div class="layout__boxTitle">
-          <h3>Sign Up</h3>
-        </div>
-      </div>
-      <div class="layout__body">
-        <h2 class="auth__tagline">Keep track of your lifts!</h2>
 
-        <form class="form" action="" method="POST">
+{% else %}
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="row w-100 m-0">
+          <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+            <div class="card col-lg-4 mx-auto">
+              <div class="card-body">
+                <h3 class="card-title text-left mb-3">Register</h3>
+
+                          <form class="form " action="" method="POST">
           {% csrf_token %}
 
           {% for field in form %}
@@ -67,34 +70,38 @@
 
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {% render_field field class="form-control" %}
-        {% for error in field.errors %}
-          <p class="help-block">{{ error }}</p>
-        {% endfor %}
       </div>
     {% endfor %}
-             {% if form.errors %}
-                 <div class="span12">
-                    {% for error in form.errors %}
-                        {{key}} : {{value}}
-                    {% endfor %}
-                 </div>
-             {% endif %}
 
+                           <div class="form-group d-flex align-items-center justify-content-between">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input"> Remember me </label>
+                    </div>
+                    <a href="#" class="forgot-pass">Forgot password</a>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block enter-btn">  Sign Up</button>
+                  </div>
+                  <div class="d-flex">
+                    <button class="btn btn-facebook col mr-2">
+                      <i class="mdi mdi-facebook"></i> Facebook </button>
+                    <button class="btn btn-google col">
+                      <i class="mdi mdi-google-plus"></i> Google plus </button>
+                  </div>
+                  <p class="sign-up text-center">Already have an Account?  <a href="{% url 'login' %}">  Login</a></p>
+                  <p class="terms">By creating an account you are accepting our<a href="#"> Terms & Conditions</a></p>
 
-          <button class="btn btn--main" type="submit">
-
-
-            Sign Up
-          </button>
         </form>
 
-        <div class="auth__action">
-          <p>Already signed up ?</p>
-          <a href="{% url 'login' %}" class="btn btn--link">Sign In</a>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
         </div>
+        <!-- row ends -->
       </div>
+      <!-- page-body-wrapper ends -->
     </div>
-  </div>
-  {% endif %}
-</main>
-{% endblock content %}
+{% endif %}
+{% endblock %}

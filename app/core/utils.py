@@ -1,5 +1,9 @@
 from .models import CustomExcercise,Workout,Excercise
 import hashlib
+from django.db.models import Count
+import datetime
+from datetime import date
+
 
 def get_excercise_categories(user,category):
 
@@ -214,9 +218,34 @@ def attribute_change_check(request,workout):
         return weight_change,weight_change_bool,height_change,height_change_bool,bmi_change,bmi_change_bool
 
 
+def quick_stats(request):
 
+    try:
+        workouts = Workout.objects.filter( user=request.user ).order_by( '-date' )
 
+        #This is the workout that is done most frequently.
+        fav_cat = workouts.filter( user=request.user ).values( 'category' ).annotate( count=Count( 'category' ) ).order_by(
+            "-count" )[0]['category']
 
+        # How often do yo train a week
+        workout_count = workouts.filter( user=request.user ).count()
+        first_workout = workouts.filter( user=request.user ).order_by( "date" )[0].date
+        current_time = datetime.datetime.now()
+        d0 = date( first_workout.year, first_workout.month, first_workout.day )
+        d1 = date( current_time.year, current_time.month, current_time.day )
+        time_delta_week = (d1 - d0).days / 7
+        workout_per_week = int( workout_count / time_delta_week )
+
+        #Avg of 4 main excercise's max lifts.
+        all_records_by_user = get_all_records_by_user( request )
+        record_weights = []
+        for record in all_records_by_user:
+            record_weights.append( record.weight )
+        avg_strength = sum( record_weights ) / len( record_weights )
+    except:
+        fav_cat,workout_per_week,avg_strength = '','',''
+
+    return fav_cat,workout_per_week,avg_strength
 # 3fef7ff0fc1660c6bd319b3a8109fcb9f81985eabcbbf8958869ef03d605a9eb
 
 

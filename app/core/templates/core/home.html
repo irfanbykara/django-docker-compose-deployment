@@ -1,125 +1,267 @@
-{% extends '.html' %}
+{% extends 'main.html' %}
 {% load static %}
 
 {% block content %}
 
-<main class="layout layout--3">
-        {% if request.user.is_authenticated %}
-
-  <div class="container">
-        <!-- Topics Start -->
-        {% include 'base/categories_component.html' %}
-
-        <!-- Topics End -->
-
-        <!-- Room List Start -->
-        <div class="roomList">
-          <div class="mobile-menu">
-
-            <div class="mobile-menuItems">
-              <button class="btn btn--main btn--pill" id="categoriesModalButton" onclick="open_categories_modal()">Categories</button>
-
-              <button class="btn btn--main btn--pill" id="recordsModalButton" onclick="open_records_modal()">Records</button>
-
-
-            </div>
-          </div>
-
-
-          <div class="roomList__header">
-            <div>
-              <h2></h2>
-              <p></p>
-            </div>
-
-            <a class="btn btn--main" href="{% url 'create-workout' %}">
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                <title>add</title>
-                <path
-                  d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z">
-                </path>
-              </svg>
-              Create Workout
-            </a>
-            <div class="btn " ><p></p></div>
-            <div class="btn btn--main">
-
-              <form action="/">
-                <input type="date" id="q" name="q">
-                <input type="submit" value="Check">
-
-
-              </form>
-
-            </div>
-
-          </div>
-
-      <!-- Modal content -->
-        <div id="categories_modal" class="modal">
-
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close1">&times;</span>
-
-
-                  {% for category in categories %}
-                        <li>
-                    <a href="{% url 'home' %}?q={{category}}">{{category}}<span></span></a>            </li>
-
-
-                  {% endfor %}  </div>
-
-    </div>
-
-
-        <div id="records_modal" class="modal">
-
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span class="close2">&times;</span>
-
-
-                      {% for record in records %}
-        <div class="activities__box">
-            <div class="activities__boxHeader roomListRoom__header">
-                <a href="" class="roomListRoom__author">
-                    <div class="avatar avatar--small">p
-                        <img src="{{record.workout.user.profile.avatar.url}}" />
+{% if request.user.is_authenticated %}
+<div class="row">
+              <div class="col-12 grid-margin stretch-card" >
+                <div class="card corona-gradient-card">
+                  <div class="card-body py-0 px-0 px-sm-3" style="margin-top:10px; margin-bottom:10px; margin-right:10px;">
+                    <div class="row align-items-center">
+                      <div class="col-4 col-sm-3 col-xl-2">
+                        <img src="assets/images/dashboard/Group126@2x.png" class="gradient-corona-img img-fluid" alt="">
+                      </div>
+                      <div class="col-5 col-sm-7 col-xl-8 p-0">
+                        <h4 class="mb-1 mb-sm-0">Want even more features?</h4>
+                        <p class="mb-0 font-weight-normal d-none d-sm-block">Check out our Pro version with unique features!</p>
+                      </div>
+                      <div class="col-3 col-sm-2 col-xl-2 pl-0 text-center">
+                        <span>
+                          <a href="#" target="_blank" class="btn btn-outline-light btn-rounded get-started-btn">Upgrade to PRO(Soon)</a>
+                        </span>
+                      </div>
                     </div>
-                    <p>
-                        <span>by {{record.workout.user.username}}</span>
-                    </p>
-                </a>
-
-
-
-            </div>
-            <div class="activities__boxContent">
-                <p>{{record}}<a href=""></a></p>
-                <span></span>
-                <div class="activities__boxRoomContent">
-                    <p>{{record.weight}} kg for {{record.rep}} reps</p>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-        {% endfor %}
+<div class="row">
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Weight</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(kg)</p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        {% if increasing_weight%}
+                        <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                        {% else %}
+                          <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{request.user.profile.weight|default_if_none:"Please provide weight"}} </h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Height</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(cm)</p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                         {% if increasing_weight%}
+                        <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                        {% else %}
+                          <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{request.user.profile.height|default_if_none:"Please provide height" }}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Bmi</h3>
+                          <p class="text-wa ml-2 mb-0 font-weight-medium">(%)</p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                         {% if increasing_bmi%}
+                        <div class="icon icon-box-danger ">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                        {% else %}
+                          <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{request.user.profile.bmi|default_if_none:""}}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Age</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                      <div class="col-3">
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{request.user.profile.age|default_if_none:"Please provide age"}}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 grid-margin stretch-card" >
+                <div class="card" style="height:70vh;overflow-y:scroll;">
+                  <div class="card-body" >
+                    <h4 class="card-title">Personal Records</h4>
+                      <p> (Squat,Bench,Deadlift,Overhead Press)</p>
+                  <canvas id="prChart" width="40" height="30vh"></canvas>
 
-     </div>
-
-    </div>
 
 
-          {% include 'base/workout_component.html' %}
+                    {% for record in all_records_by_user %}
+                    <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                      <div class="text-md-center text-xl-left">
+                        <h6 class="mb-1">{{record}}</h6>
+                        <p class="text-muted mb-0">{{record.weight}} kg for {{record.rep}} reps</p>
+                      </div>
+                      <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                        <h6 class="font-weight-bold mb-0">{{record.workout.date.day}}.{{record.workout.date.month}}.{{record.workout.date.year}}</h6>
 
-        </div>
-        <!-- Room List End -->
 
-        <!-- Activities Start -->
-        {% include 'base/records_component.html' %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8 grid-margin stretch-card" >
+                <div class="card" style="height:70vh;overflow-y:scroll;" >
+                  <div class="card-body" >
+                    <div class="d-flex flex-row justify-content-between">
+                      <h4 class="card-title mb-1">Workouts</h4>
+                      <p class="text-muted mb-1">Your data status</p>
+                    </div>
 
-      {% else %}
-        <header class="masthead">
+
+                    <div class="row">
+
+                      <div class="col-12">
+
+                        <div class="preview-list">
+            <ul class="navbar-nav w-100">
+              <li class="nav-item w-100">
+                                        <button class="nav-link btn btn-success create-new-button js-create-workout" id="secCreateBtn" data-url="{% url 'create-workout' %}"> &nbsp+ New Workout &nbsp </button>
+
+                <div class="row">
+                    <div class="col-sm-6 col-md-2 col-lg-2 col-xl-2" style="margin-top:1vh;">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuOutlineButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Category </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton4" style="">
+                          {% for category in categories %}
+                          <a class="dropdown-item" href="{% url 'home' %}?q={{category}}">{{category|title}}</a>
+                          <div class="dropdown-divider"></div>
+                          {% endfor %}
+                        </div>
+                      </div>                 </div>
+                  <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2"></div>
+                    <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8">
+                     <form class="nav-link mt-2 mt-md-0 d-none d-lg-flex search" action="/">
+                <input type="date" id="q" name="q" class="form-control p_input">
+                <input type="submit" value="Check">
+                </form>
+                  </div>
+
+                </div>
+
+
+              </li>
+            </ul>
+                           {% include 'core/partial_workout_list.html' %}
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+<div class="row">
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Frequency</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{workout_per_week}}</h2>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">{{workout_per_week}} workouts a week on avarage </h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Favorite</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{fav_cat|title}}</h2>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal"> Your favorite category is {{fav_cat|title}}.</h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Max</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{avg_strength}} kg</h2>
+                          <p class="text-danger ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">Your average max on strength exercises is {{avg_strength}} kg</h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+{% else %}
+                  <header class="masthead">
             <div class="container">
                 <div class="masthead-subheading">Welcome To Fitness Tracker!</div>
                 <div class="masthead-heading text-uppercase">Wanna turn on the bear mode?</div>
@@ -130,7 +272,7 @@
 
                 <br>
 
-                <a class="btn btn-primary btn-xl text-uppercase" href="/login/">Come inside!</a>
+                <a class="btn btn-primary btn-xl text-uppercase" href="{% url 'login' %}">Come inside!</a>
                                 <br>
 
                                 <br>
@@ -150,15 +292,88 @@
 
             </div>
         </header>
+{% endif %}
 
-<!--      <div class="container" style="background-image:url("{% static 'images/girl_lifting.jpg' %}"); ">-->
 
+<!-- Modal -->
+<div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Workout</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
 
-<!--        <h1 >Welcome to fitness tracker! Login now to keep track of your lifts!</h1>-->
-    {% endif %}
+          {% for field in form %}
+          <div class="form__group form__group">
+            <label for="room_name">{{field.label}}</label>
+            {{field}}
+          </div>
+          {% endfor %}
+
+
+          <center><button type="submit" class="btn btn-inverse-success btn-fw">Create</button></center>
+        </form>
+      </div>
+    </div>
   </div>
+</div>
 
-</main>
 
+
+
+<style>
+    @media (min-width: 720px) {
+        #secCreateBtn {
+            display: none;
+        }
+    }
+</style>
+
+
+
+<script>
+const ctx = document.getElementById('prChart').getContext('2d');
+const prChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{labels|safe}},
+        datasets: [{
+            label: 'Personal Records in Kg',
+            data: {{data|safe}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+</script>
 {% endblock %}
