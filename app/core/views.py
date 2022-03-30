@@ -9,8 +9,10 @@ from django.db.models import Q
 from django.db.models import Max
 from .utils import *
 import datetime
+from datetime import date
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.db.models import Count
 
 
 # Create your views here.
@@ -26,13 +28,10 @@ def home(request):
                 user_weight=request.user.profile.weight,
                 user_height=request.user.profile.height,
                 user_bmi=request.user.profile.bmi
-
             )
             workout.save()
-
             return redirect( 'workout-detail', pk=workout.id )
         all_workouts = Workout.objects.all()
-
         if request.user.profile.height != None and request.user.profile.weight != None and request.user.profile.bmi != None:
             increasing_bmi, avg_bmi = get_bmi_avg( all_workouts, request )
             increasing_height, avg_height = get_height_avg( all_workouts, request )
@@ -43,33 +42,40 @@ def home(request):
             increasing_weight, avg_weight = True, None
         q = request.GET.get( 'q' ) if request.GET.get( 'q' ) != None else ''
         q = request.GET.get( 'q' ) if request.GET.get( 'q' ) != None else ''
-
         workouts = Workout.objects.filter(
             Q( date__icontains=q ) | Q( category__icontains=q )
         )
         profile = Profile.objects.get( user=request.user )
-
         categories = get_categories()
         records = get_records()
         workouts = workouts.filter( user=request.user ).order_by( '-date' )
-
         form = WorkoutForm()
-
+        excercises = Excercise.objects.filter(workout__user=request.user)
         labels, data = get_primary_records_by_user( request )
         all_records_by_user = get_all_records_by_user( request )
+        fav_cat, workout_per_week, avg_strength = quick_stats(request)
         context = {'workouts': workouts, 'profile': profile, 'categories': categories, 'records': records,
                    'labels': labels, 'data': data, 'all_records_by_user': all_records_by_user,
                    'form': form,
                    'page': page,
+                   'avg_strength':avg_strength,
                    'increasing_bmi': increasing_bmi,
                    'increasing_height': increasing_height,
-                   'increasing_weight': increasing_weight}
+                   'increasing_weight': increasing_weight,
+                   'workout_per_week':workout_per_week,
+                   'fav_cat':fav_cat}
 
-        return render( request, 'core/home_template.html', context )
+        try:
+            return render( request, 'core/home.html', context )
+        except Exception as e:
+            return HttpResponse(e)
     else:
         workouts = {}
         context = {'workouts': workouts}
-        return render( request, 'core/home_template.html', context )
+        try:
+            return render( request, 'core/home.html', context )
+        except Exception as e:
+            return HttpResponse(e)
 
 
 def create_workout(request):
@@ -117,7 +123,6 @@ def create_workout(request):
 
 
 def login_page(request):
-    print('You are in the login page now...')
     page = 'login'
     context = {'page': page}
 
@@ -126,7 +131,7 @@ def login_page(request):
     if request.method == 'POST':
         username = request.POST.get( 'username' ).lower()
         password = request.POST.get( 'password' )
-
+        remember_me = request.POST.get('rememberme')
         try:
             user = User.objects.get( username=username )
 
@@ -136,21 +141,17 @@ def login_page(request):
                              password=password )
         if user is not None:
             login( request, user )
+            if not remember_me:
+                request.session.set_expiry( 0 )
             return redirect( 'home' )
         else:
             messages.error( request, 'Username or password is wrong.' )
-    print('You are about to be sent to...')
     try:
-
-        return render( request, 'core/login_register_template.html', context )
+        return render( request, 'core/login_register.html', context )
     except Exception as e:
         return HttpResponse( e )
 
-
-#
-#
 def logout_user(request):
-    print( 'Here I am' )
     logout( request )
     return redirect( 'home' )
 
@@ -168,18 +169,13 @@ def register_user(request):
             username = user.username
             email = user.email
             user.save()
-            Profile.objects.create(
-                user=user,
-                name=user.username,
-            )
-
             login( request, user )
             return redirect( 'home' )
         else:
             for error in dict( form.errors ).values():
                 messages.error( request, error, )
 
-    return render( request, 'core/login_register_template.html', context )
+    return render( request, 'core/login_register.html', context )
 
 
 @login_required( login_url='login' )
@@ -201,7 +197,7 @@ def workout_page(request, pk):
     context = {'form': form, 'related_excercises': related_excercises, 'page': page, 'workout': workout}
 
     try:
-        return render( request, 'core/workout_detail_template.html',
+        return render( request, 'core/workout_detail.html',
                        context
                        )
     except Exception as e:
@@ -257,7 +253,7 @@ def workout_detail(request, pk):
                'bmi_change_bool': bmi_change_bool,
                'page': page}
     try:
-        return render(request, 'core/workout_detail_template.html', context )
+        return render(request, 'core/workout_detail.html', context )
     except Exception as e:
         return HttpResponse(e)
 
@@ -286,7 +282,7 @@ def profile(request, pk):
 
             return redirect( 'home', )
 
-    return render( request, 'core/update-user.html', context )
+    return render( request, 'core/profile.html', context )
 
 
 @login_required
@@ -411,5 +407,3 @@ def update_excercise(request, pk):
                                           context,
                                           request=request )
     return JsonResponse( data )
-
-

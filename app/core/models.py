@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save
 
 # Create your models here.
 LEVEL_CHOICES = (
@@ -11,7 +13,7 @@ LEVEL_CHOICES = (
 
 class Profile( models.Model ):
     user = models.OneToOneField( User, on_delete=models.CASCADE, null=True, )
-    name = models.CharField( max_length=200, null=True )
+    name = models.CharField( max_length=200, null=True, )
     email = models.CharField( max_length=200, null=True )
     level = models.CharField( max_length=200, choices=LEVEL_CHOICES, null=True )
     avatar = models.ImageField( null=True, default="indir.png" )
@@ -66,3 +68,13 @@ class CustomExcercise( models.Model ):
 
     def __str__(self):
         return self.name
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

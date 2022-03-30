@@ -16,3 +16,5 @@ sqlparse==0.4.2
 tzdata==2021.5
 virtualenv==20.12.0
 whitenoise==6.0.0
+cffi==1.14.6
+django-allauth==0.49.0

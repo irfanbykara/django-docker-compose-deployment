@@ -1,0 +1,236 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Height During This Workout</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{workout.user_height|default_if_none:"--"}} cm</h2>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">+ {{height_change}} %</p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">{{height_change}}%</h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Weight During This Workout</h5>
+                    <div class="row">
+                      <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{workout.user_weight|default_if_none:"--"}} kg</h2>
+                            {% if not weight_change_bool %}
+                          <p class="text-success ml-2 mb-0 font-weight-medium">-{{weight_change}}%</p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal"> {{weight_change}}% less than current weight</h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
+                      </div>
+                        {% else%}
+                           <p class="text-danger ml-2 mb-0 font-weight-medium">+{{weight_change}}%</p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">{{weight_change}}% more than current weight</h6>
+                      </div>
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
+                      </div>
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h5>Bmi During This Workout</h5>
+                    <div class="row">
+                        {% if not bmi_change_bool %}
+                     <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{workout.user_bmi|default_if_none:"--"}}%</h2>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">-{{bmi_change}}% </p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">{{bmi_change}}% less than current BMI</h6>
+                      </div>
+                        {% else %}
+                                              <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                        <div class="d-flex d-sm-block d-md-flex align-items-center">
+                          <h2 class="mb-0">{{workout.user_bmi|default_if_none:"--"}}%</h2>
+                          <p class="text-danger ml-2 mb-0 font-weight-medium">+{{bmi_change}}% </p>
+                        </div>
+                        <h6 class="text-muted font-weight-normal">{{bmi_change}} % more than current BMI</h6>
+                      </div>
+
+                        {% endif %}
+                      <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                        <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              <div class="row">
+                              <div class="col-lg-8 grid-margin stretch-card">
+
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-9">
+                                            <h4 class="card-title">{{workout.name|title}}</h4>
+                    <p class="card-description"> Review and update your workout <code> and turn on the bear mode!</code>
+                    </p>
+
+                      </div>
+                      <div class="col-md-3" style="margin-top:1vh;">
+                        <button class="nav-link btn btn-success create-new-button js-create-excercise"
+                        data-url="{% url 'create-excercise' workout.id %}">+ Create New Excercise</button>
+
+                      </div>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table table-hover" id="excercise_table">
+                        <thead>
+                          <tr>
+                            <th> Excercise Name </th>
+                            <th> Rep </th>
+                            <th> Weight </th>
+                            <th> Category </th>
+                            <th> Time </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'core/partial_excercise_list.html' %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <h4 class="card-title">Your PRs for these excercises:</h4>
+
+<canvas id="myChart" style="height:50vh"></canvas>
+        {% for abs_pr in abs_pr_list %}
+                <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
+                      <div class="text-md-center text-xl-left">
+                        <h6 class="mb-1">{{abs_pr.name}}</h6>
+                        <p class="text-muted mb-0">{{abs_pr.workout.date|date:"M d, Y"}}</p>
+                      </div>
+                      <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                        <h6 class="font-weight-bold mb-0">{{abs_pr.weight}} kg | {{abs_pr.rep}} rep</h6>
+                      </div>
+                    </div>
+
+        {% endfor %}
+
+    </div>
+
+
+
+                  </div>
+                </div>
+              </div>
+
+
+ <div class="modal fade" id="addExcerciseModal"  role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content"  >
+      </div>
+    </div></div>
+
+ <div class="modal fade" id="modal-book">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      </div>
+    </div></div>
+
+
+<!-- Modal -->
+
+
+<div class="modal fade" id="deleteExcerciseModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div></div>
+
+
+<div class="modal fade" id="updateExcerciseModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      </div>
+    </div></div>
+
+
+
+<script>
+ctx = document.getElementById("myChart").getContext("2d");
+
+let data = {
+    datasets: [{
+        label: "Personal Records",
+        labels: {{labels|safe}},
+        data: {{data|safe}},
+                    backgroundColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+    }]
+}
+
+let options = {
+        scales: {
+            y: {
+                suggestedMin: 0,
+                suggestedMax: 30
+            },
+             x: {
+                suggestedMin: 0,
+                suggestedMax: 300
+            }
+        },
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: function(ctx) {
+
+                    let label = ctx.dataset.labels[ctx.dataIndex];
+                    label += " (" + ctx.parsed.x + ", " + ctx.parsed.y + ")";
+                    return label;
+                }
+            }
+        }
+    }
+}
+
+scatterChart = new Chart(ctx, {
+    type: "scatter",
+    data: data,
+    options: options
+});
+
+
+</script>
+{% endblock %}
