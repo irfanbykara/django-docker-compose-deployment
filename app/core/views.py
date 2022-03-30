@@ -163,11 +163,6 @@ def register_user(request):
             username = user.username
             email = user.email
             user.save()
-            Profile.objects.create(
-                user=user,
-                name=user.username,
-            )
-
             login( request, user )
             return redirect( 'home' )
         else:

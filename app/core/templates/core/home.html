@@ -212,7 +212,9 @@
                           <h2 class="mb-0">{{workout_per_week}}</h2>
                           <p class="text-success ml-2 mb-0 font-weight-medium"></p>
                         </div>
+                          {% if workout_per_week %}
                         <h6 class="text-muted font-weight-normal">{{workout_per_week}} workouts a week on avarage </h6>
+                          {% endif %}
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-codepen text-primary ml-auto"></i>
@@ -231,7 +233,10 @@
                           <h2 class="mb-0">{{fav_cat|title}}</h2>
                           <p class="text-success ml-2 mb-0 font-weight-medium"></p>
                         </div>
+                                                    {% if fav_cat %}
+
                         <h6 class="text-muted font-weight-normal"> Your favorite category is {{fav_cat|title}}.</h6>
+                          {% endif %}
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-wallet-travel text-danger ml-auto"></i>
@@ -246,11 +251,15 @@
                     <h5>Max</h5>
                     <div class="row">
                       <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                            {% if avg_strength %}
                         <div class="d-flex d-sm-block d-md-flex align-items-center">
+
+
                           <h2 class="mb-0">{{avg_strength}} kg</h2>
                           <p class="text-danger ml-2 mb-0 font-weight-medium"></p>
                         </div>
                         <h6 class="text-muted font-weight-normal">Your average max on strength exercises is {{avg_strength}} kg</h6>
+                          {% endif %}
                       </div>
                       <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
                         <i class="icon-lg mdi mdi-monitor text-success ml-auto"></i>
