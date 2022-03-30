@@ -226,8 +226,10 @@ def quick_stats(request):
         #This is the workout that is done most frequently.
         fav_cat = workouts.filter( user=request.user ).values( 'category' ).annotate( count=Count( 'category' ) ).order_by(
             "-count" )[0]['category']
-
+    except:
+        fav_cat = ''
         # How often do yo train a week
+    try:
         workout_count = workouts.filter( user=request.user ).count()
         first_workout = workouts.filter( user=request.user ).order_by( "date" )[0].date
         current_time = datetime.datetime.now()
@@ -235,15 +237,19 @@ def quick_stats(request):
         d1 = date( current_time.year, current_time.month, current_time.day )
         time_delta_week = (d1 - d0).days / 7
         workout_per_week = int( workout_count / time_delta_week )
-
+    except:
+        workout_per_week = ''
         #Avg of 4 main excercise's max lifts.
+    try:
         all_records_by_user = get_all_records_by_user( request )
         record_weights = []
         for record in all_records_by_user:
             record_weights.append( record.weight )
         avg_strength = sum( record_weights ) / len( record_weights )
     except:
-        fav_cat,workout_per_week,avg_strength = '','',''
+        avg_strength = ''
 
     return fav_cat,workout_per_week,avg_strength
 # 3fef7ff0fc1660c6bd319b3a8109fcb9f81985eabcbbf8958869ef03d605a9eb
+
+
