@@ -69,16 +69,16 @@ def get_primary_records_by_user(request):
     records_by_user = []
     labels = []
     data = []
-    name_list = ['BARBELL BENCH PRESS','SQUAT','DEADLIFT','OVERHEAD PRESS']
-    for name in name_list:
-        if Excercise.objects.filter(workout__user=request.user, name=name ).order_by( 'weight' )!=None:
-            excercise = Excercise.objects.filter(workout__user=request.user, name=name ).order_by( 'weight' )
-            records_by_user = list_operator(excercise,records_by_user)
+    name_list = ['BARBELL BENCH PRESS', 'SQUAT', 'DEADLIFT', 'OVERHEAD PRESS']
+    if Excercise.objects.filter( workout__user=request.user, ).order_by( 'weight' ) != None:
+        records_by_user = Excercise.objects.filter( workout__user=request.user, ).order_by( 'weight' )[:5]
 
     for record in records_by_user:
-        labels.append(record.name)
-        data.append(record.weight)
-    return labels,data
+        if record.name not in labels:
+            labels.append( record.name )
+            data.append(record.weight)
+    return labels, data
+
 
 def get_all_records_by_user(request):
     all_records_by_user = []
@@ -89,7 +89,6 @@ def get_all_records_by_user(request):
             if excercise.name not in added_name_list:
                 all_records_by_user.append(excercise)
                 added_name_list.append(excercise.name)
-
     return all_records_by_user
 
 def list_operator(single_list,final_list):

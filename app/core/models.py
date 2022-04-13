@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
+from django.core.validators import FileExtensionValidator
 
 # Create your models here.
 LEVEL_CHOICES = (
@@ -56,6 +57,10 @@ class Excercise( models.Model ):
     workout = models.ForeignKey( Workout, on_delete=models.CASCADE )
     rep = models.IntegerField()
     weight = models.IntegerField()
+    video = models.FileField(null=True,
+    validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
+    video_requests = models.IntegerField(default=0)
+
 
     def __str__(self):
         return self.name

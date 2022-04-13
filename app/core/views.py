@@ -13,6 +13,7 @@ from datetime import date
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.db.models import Count
+from django.forms import modelform_factory
 
 
 # Create your views here.
@@ -32,6 +33,9 @@ def home(request):
             workout.save()
             return redirect( 'workout-detail', pk=workout.id )
         all_workouts = Workout.objects.all()
+        video_requested_excercises = Excercise.objects.filter(workout__user=request.user).exclude(video_requests=0)
+
+
         if request.user.profile.height != None and request.user.profile.weight != None and request.user.profile.bmi != None:
             increasing_bmi, avg_bmi = get_bmi_avg( all_workouts, request )
             increasing_height, avg_height = get_height_avg( all_workouts, request )
@@ -59,6 +63,7 @@ def home(request):
                    'form': form,
                    'page': page,
                    'avg_strength':avg_strength,
+                   'video_requested_excercises':video_requested_excercises,
                    'increasing_bmi': increasing_bmi,
                    'increasing_height': increasing_height,
                    'increasing_weight': increasing_weight,
@@ -163,7 +168,7 @@ def register_user(request):
             username = user.username
             email = user.email
             user.save()
-            login( request, user )
+            login( request, user,backend='django.contrib.auth.backends.ModelBackend' )
             return redirect( 'home' )
         else:
             for error in dict( form.errors ).values():
@@ -403,3 +408,125 @@ def update_excercise(request, pk):
     return JsonResponse( data )
 
 
+def personal_stats(request):
+    main_excercises = ['BARBELL BENCH PRESS','SQUAT','DEADLIFT','OVERHEAD PRESS','BARBELL ROW']
+
+    weight_list = []
+    for excercise in main_excercises:
+        temp_list = []
+        excercises = Excercise.objects.filter(workout__user=request.user)
+        related_excercises = excercises.filter(name=excercise).order_by('-workout__date')[:20].values('weight')
+        related_excercises= list(related_excercises.values_list('weight', flat=True))
+        print(list(related_excercises))
+        weight_list.append(related_excercises)
+    max_len = 0
+    for weights in weight_list:
+        if len(weights)>max_len:
+            max_len = len(weights)
+
+    user_workouts = Workout.objects.filter(user=request.user)
+    num_workout_per_category = user_workouts.values( 'category' ).annotate(
+        workout_count=Count( 'pk' )
+    ).order_by( 'category' )
+    percent_labels = []
+    percent_nums = []
+    for workout in num_workout_per_category:
+        percent_labels.append(workout['category'])
+        percent_nums.append(workout['workout_count'])
+    labels = list( range( 0, max_len ) )
+    labels_pr, data_pr = get_primary_records_by_user( request )
+    workouts = Workout.objects.filter(user=request.user)
+    workout_non_null =workouts.filter(user_weight__isnull=False)
+    workout_weights = list(workout_non_null.order_by('date').values_list('user_weight',flat=True)[:20])
+    print(workout_weights)
+    weight_labels =list(workout_non_null.order_by('date').values_list('date',flat=True)[:20])
+    weight_labels = [x.strftime("%d-%b-%y") for x in weight_labels ]
+    print(weight_labels)
+    workout_bmi = list(workout_non_null.order_by('date').values_list('user_bmi',flat=True)[:20])
+    bmi_labels =list(workout_non_null.order_by('date').values_list('date',flat=True)[:20])
+    bmi_labels = [x.strftime("%d-%b-%y") for x in bmi_labels ]
+    fav_cat, workout_per_week, avg_strength = quick_stats( request )
+    user_height = request.user.profile.height
+    user_weight = request.user.profile.weight
+    user_bmi = request.user.profile.bmi
+    context ={'main_excercises':main_excercises,'labels':labels,'weight_list':weight_list,'workout_weights':workout_weights,
+              'weight_labels':weight_labels,
+              'data_pr':data_pr, 'labels_pr':labels_pr,
+              'bmi_labels':bmi_labels,
+              'workout_bmi':workout_bmi,
+              'percent_labels':percent_labels,
+              'percent_nums':percent_nums,
+              'fav_cat':fav_cat,
+              'workout_per_week':workout_per_week,
+              'avg_strength':avg_strength,
+              'user_height':user_height,
+              'user_weight':user_weight,
+              'user_bmi':user_bmi
+              }
+    return render(request,'core/personal_stats.html',context)
+
+def global_stats(request):
+    if request.method == 'POST':
+        pass
+
+    record_excercises = Excercise.objects.all().order_by('-weight')
+    context = {'record_excercises':record_excercises}
+    return render(request, 'core/global_stats.html',context)
+
+def upload_video(request, pk):
+    excercise = Excercise.objects.get(id=pk)
+    data = dict()
+
+    if request.method == 'POST':
+        video = request.FILES['video']
+        print('second')
+        excercise.video = video
+        excercise.video_requests=0
+        print('Got the video')
+        excercise.save()
+        messages.success( request, 'Video added successfully.' )
+        return redirect('global-stats')
+    else:
+
+
+        context = {'excercise': excercise}
+        data['html_form'] = render_to_string( 'core/partial_upload_video.html',
+                                              context,
+                                              request=request )
+    return JsonResponse( data )
+
+
+def show_video(request, pk):
+    excercise = Excercise.objects.get(id=pk)
+    print('*************************')
+    print(excercise.video.url)
+    data = dict()
+    context = {'excercise': excercise}
+    data['html_form'] = render_to_string( 'core/partial_show_video.html',
+                                          context,
+                                          request=request )
+    return JsonResponse( data )
+
+def request_video(request, pk):
+    excercise = Excercise.objects.get(id=pk)
+    data = dict()
+    if request.method == 'POST':
+        current_requests = excercise.video_requests
+        current_requests += 1
+        excercise.video_requests = current_requests
+        excercise.save()
+        messages.success( request, 'Request sent successfully.' )
+        return redirect('global-stats')
+
+
+    context = {'excercise': excercise}
+    data['html_form'] = render_to_string( 'core/partial_request_video.html',
+                                          context,
+                                          request=request )
+    return JsonResponse( data )
+
+
+def video_request_notification(request):
+    video_requested_excercises = Excercise.objects.filter( workout__user=request.user ).exclude( video_requests=0 )
+    context = {'video_requested_excercises':video_requested_excercises}
+    return render(request,'core/video_requests.html',context)

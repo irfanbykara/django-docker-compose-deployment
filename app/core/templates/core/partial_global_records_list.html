@@ -1,0 +1,38 @@
+        {% load static %}
+
+                                                  {% for excercise in record_excercises %}
+
+                          <tr>
+
+                            <td class="py-1">
+                                <img src="{{excercise.workout.user.profile.avatar.url}}" onerror="if (this.src != 'error.jpg') this.src = '{% static 'images/avatar.svg' %}';" alt="image">
+
+                            </td>
+                              <td>                                {{excercise.workout.user.username}}
+                              </td>
+                            <td> {{excercise.workout.user.profile.age}} </td>
+                            <td>
+                                {{excercise.workout.user.profile.weight}}
+                            </td>
+                            <td>                                {{excercise.workout.user.profile.height}}
+                            </td>
+                            <td> {{excercise.name}} </td>
+                                                          <td> {{excercise.weight}} </td>
+                            <td> {{excercise.rep}} </td>
+                              {% if excercise.video %}
+                              <td> <button class="badge badge-success js-show-video" data-url="{% url 'show-video' excercise.id %}">Watch Video</button> </td>
+                              {% else %}
+                                {% if request.user == excercise.workout.user %}
+                              <td> <button class="badge badge-info js-upload-video" data-url="{% url 'upload-video' excercise.id %}"  >Upload</button> </td>
+
+                                {% elif excercise.video_requests != 0 %}
+                              <td> <button class="badge badge-warning"   >Requested</button> </td>
+
+                              {% else %}
+                              <td> <button class="badge badge-danger js-request-video" data-url="{% url 'request-video' excercise.id %}">Request Video</button> </td>
+
+
+                              {% endif %}
+                              {% endif %}
+                          </tr>
+                        {% endfor %}

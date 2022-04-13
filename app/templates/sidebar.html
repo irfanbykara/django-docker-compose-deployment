@@ -49,19 +49,19 @@
             <span class="nav-link">Navigation</span>
           </li>
           <li class="nav-item menu-items active">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="{% url 'global-stats' %}">
               <span class="menu-icon">
                 <i class="mdi mdi-speedometer"></i>
               </span>
-              <span class="menu-title">Global Statistics (Soon)</span>
+              <span class="menu-title">Global Statistics</span>
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="/" aria-expanded="false" aria-controls="ui-basic">
+            <a class="nav-link"  href="{% url 'personal-stats' %}" aria-expanded="false" aria-controls="ui-basic">
               <span class="menu-icon">
                 <i class="mdi mdi-laptop"></i>
               </span>
-              <span class="menu-title">Your Statistics (Soon)</span>
+              <span class="menu-title">Your Statistics</span>
               <i class="menu-arrow"></i>
             </a>
           </li>

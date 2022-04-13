@@ -1,0 +1,359 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-xl-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Stats for @{{request.user.username}}</h4>
+  <div id="chart-carousel" class="carousel slide" data-ride="carousel">
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="carousel-item active" >
+      <canvas id="liftLogs" ></canvas>
+    </div>
+    <div class="carousel-item">
+            <canvas id="userWeight" ></canvas>
+
+    </div>
+          <div class="carousel-item">
+            <canvas id="percentChart" ></canvas>
+
+    </div>
+
+          <div class="carousel-item">
+            <canvas id="userBmi" ></canvas>
+
+    </div>
+
+    <div class="carousel-item">
+      <canvas id="prChart" ></canvas>
+    </div>
+  </div>
+
+ <!-- Left and right controls -->
+  <a class="carousel-control-prev" href="#chart-carousel" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#chart-carousel" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+</div> <!-- Carousel -->
+                    <div class="d-flex py-4">
+                      <div class="preview-list w-100">
+                        <div class="preview-item p-0">
+                          <div class="preview-thumbnail">
+                            <img src="{{request.user.profile.avatar.url}}" onerror="if (this.src != 'error.jpg') this.src = '{% static 'images/avatar.svg' %}';" class="rounded-circle" alt="">
+                          </div>
+                          <div class="preview-item-content d-flex flex-grow">
+                            <div class="flex-grow">
+                              <div class="d-flex d-md-block d-xl-flex justify-content-between">
+                                <h6 class="preview-subject">{{request.user.username}}</h6>
+                                <p class="text-muted text-small">4 Hours Ago</p>
+                              </div>
+                              <p class="text-muted">You are doing great {{request.user.username}}! Keep grinding!</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    <div class="col-md-6 col-xl-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Fitty infos of @{{request.user.username}}</h4>
+                      <div class="row">
+                          <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Weight</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(kg)</p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{user_weight}} </h6>
+                  </div>
+                </div>
+              </div>
+                          <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Height</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(cm)</p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{user_height}} </h6>
+                  </div>
+                </div>
+              </div>
+                                                    <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Bmi</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(%)</p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{user_bmi}} </h6>
+                  </div>
+                </div>
+              </div>
+                          <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Favorite</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Your favorite workout category is: {{fav_cat|title}} </h6>
+                  </div>
+                </div>
+              </div>
+                          <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Avg. Strength</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium">(kg)</p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Avg. max lift on strength excercises: {{avg_strength}} kg </h6>
+                  </div>
+                </div>
+              </div>
+                          <div class="col-xl-6 col-sm-12 col-lg-6 col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">Workout Per Week</h3>
+                          <p class="text-success ml-2 mb-0 font-weight-medium"></p>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">{{workout_per_week}} </h6>
+                  </div>
+                </div>
+              </div>
+
+
+
+                      </div>
+                  </div>
+                </div>
+              </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+const ctx = document.getElementById('liftLogs').getContext('2d');
+const liftLogs = new Chart(ctx, {
+    type: 'line',
+data: {
+    labels: {{labels|safe}},
+    datasets: [{
+        data: {{weight_list.0|safe}},
+        label: "{{main_excercises.0}}",
+        borderColor: "#3e95cd",
+        fill: false
+      }, {
+        data: {{weight_list.1|safe}},
+        label:  "{{main_excercises.1}}",
+        borderColor: "#8e5ea2",
+        fill: false
+      }, {
+        data: {{weight_list.2|safe}},
+        label:  "{{main_excercises.2}}",
+        borderColor: "#3cba9f",
+        fill: false
+      }, {
+        data: {{weight_list.3|safe}},
+        label:  "{{main_excercises.3}}",
+        borderColor: "#e8c3b9",
+        fill: false
+      }, {
+        data: {{weight_list.4|safe}},
+        label:  "{{main_excercises.4}}",
+        borderColor: "#c45850",
+        fill: false
+      }
+    ]
+  },
+  options: {
+     scales: {
+      y: {
+        min: 0,
+        max: 400,
+      }
+    },
+    title: {
+      display: true,
+      text: 'World population per region (in millions)'
+    }
+  }
+});
+
+const ctx2 = document.getElementById('userWeight').getContext('2d');
+const userWeight = new Chart(ctx2, {
+    type: 'line',
+data: {
+    labels: {{weight_labels|safe}},
+    datasets: [{
+        data: {{workout_weights|safe}},
+        label: "Your weight graph",
+        borderColor: "#3e95cd",
+        fill: false
+      }
+    ]
+  },
+  options: {
+        scales: {
+      y: {
+        min: 0,
+        max: 150,
+      }
+    },
+    title: {
+      display: true,
+      text: 'World population per region (in millions)'
+    }
+  }
+
+});
+
+const ctx4 = document.getElementById('userBmi').getContext('2d');
+const userBmi = new Chart(ctx4, {
+    type: 'line',
+data: {
+    labels: {{bmi_labels|safe}},
+    datasets: [{
+        data: {{workout_bmi|safe}},
+        label: "Your bmi graph %",
+        borderColor: "#3e95cd",
+        fill: false
+      }
+    ]
+  },
+  options: {
+        scales: {
+      y: {
+        min: 0,
+        max: 100,
+      }
+    },
+    title: {
+      display: true,
+      text: 'World population per region (in millions)'
+    }
+  }
+
+});
+
+
+
+const ctx3 = document.getElementById('prChart').getContext('2d');
+const prChart = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+        labels: {{labels_pr|safe}},
+        datasets: [{
+            label: 'Personal Records in Kg',
+            data: {{data_pr|safe}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const ctx5 = document.getElementById('percentChart').getContext('2d');
+const percentChart = new Chart(ctx5, {
+    type: 'doughnut',
+    data: {
+        labels: {{percent_labels|safe}},
+        datasets: [{
+            label: 'Personal Records in Kg',
+            data: {{percent_nums|safe}},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
+
+{% endblock %}

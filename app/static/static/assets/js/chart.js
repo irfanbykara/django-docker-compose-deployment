@@ -86,7 +86,8 @@ $(function() {
     }
   };
 
-  
+
+
   var doughnutPieData = {
     datasets: [{
       data: [30, 40, 30],

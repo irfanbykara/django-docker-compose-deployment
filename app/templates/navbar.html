@@ -53,8 +53,104 @@
                   <p class="p-3 mb-0 text-center">See all projects</p>
                 </div>
               </li>
-              {% endif %}
+              {% endif %}<li class="nav-item dropdown border-left">
+                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                  <i class="mdi mdi-bell"></i>
+                  {% if video_requested_excercises %}
+                  <span class="count bg-danger"></span>
+                  {% endif %}
+                </a>
+                                {% if video_requested_excercises %}
+
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                  <h6 class="p-3 mb-0">Notifications</h6>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'video-request-notification' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-calendar text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Videos requested</p>
+                      <p class="text-muted ellipsis mb-0"> You have some video requests for your record lifts. </p>
+                    </div>
+                  </a>
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <a class="dropdown-item preview-item">-->
+<!--                    <div class="preview-thumbnail">-->
+<!--                      <div class="preview-icon bg-dark rounded-circle">-->
+<!--                        <i class="mdi mdi-settings text-danger"></i>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="preview-item-content">-->
+<!--                      <p class="preview-subject mb-1">Settings</p>-->
+<!--                      <p class="text-muted ellipsis mb-0"> Update dashboard </p>-->
+<!--                    </div>-->
+<!--                  </a>-->
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <a class="dropdown-item preview-item">-->
+<!--                    <div class="preview-thumbnail">-->
+<!--                      <div class="preview-icon bg-dark rounded-circle">-->
+<!--                        <i class="mdi mdi-link-variant text-warning"></i>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="preview-item-content">-->
+<!--                      <p class="preview-subject mb-1">Launch Admin</p>-->
+<!--                      <p class="text-muted ellipsis mb-0"> New admin wow! </p>-->
+<!--                    </div>-->
+<!--                  </a>-->
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <p class="p-3 mb-0 text-center">See all notifications</p>-->
+                </div>
+              {% else %}
+                              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                  <h6 class="p-3 mb-0">Notifications</h6>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'video-request-notification' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-calendar text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Videos requested</p>
+                      <p class="text-muted ellipsis mb-0"> You have no video request now. </p>
+                    </div>
+                  </a>
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <a class="dropdown-item preview-item">-->
+<!--                    <div class="preview-thumbnail">-->
+<!--                      <div class="preview-icon bg-dark rounded-circle">-->
+<!--                        <i class="mdi mdi-settings text-danger"></i>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="preview-item-content">-->
+<!--                      <p class="preview-subject mb-1">Settings</p>-->
+<!--                      <p class="text-muted ellipsis mb-0"> Update dashboard </p>-->
+<!--                    </div>-->
+<!--                  </a>-->
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <a class="dropdown-item preview-item">-->
+<!--                    <div class="preview-thumbnail">-->
+<!--                      <div class="preview-icon bg-dark rounded-circle">-->
+<!--                        <i class="mdi mdi-link-variant text-warning"></i>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                    <div class="preview-item-content">-->
+<!--                      <p class="preview-subject mb-1">Launch Admin</p>-->
+<!--                      <p class="text-muted ellipsis mb-0"> New admin wow! </p>-->
+<!--                    </div>-->
+<!--                  </a>-->
+<!--                  <div class="dropdown-divider"></div>-->
+<!--                  <p class="p-3 mb-0 text-center">See all notifications</p>-->
+                </div>
+                            {% endif %}
+
+
+              </li>
               <li class="nav-item dropdown">
+
                 <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                   <div class="navbar-profile">
                     <img class="img-xs rounded-circle" src="{{request.user.profile.avatar.url}}" onerror="this.src = '{% static 'images/avatar.svg' %}';"  alt="">
@@ -62,6 +158,7 @@
                     <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                   </div>
                 </a>
+
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item preview-item" href="/profile/{{request.user.id}}">

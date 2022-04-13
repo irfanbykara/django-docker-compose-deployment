@@ -3,6 +3,7 @@ from .models import Excercise, User, Workout,Profile,CustomExcercise
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.forms.widgets import DateInput
+
 class UserForm(ModelForm):
     class Meta:
         model = User
@@ -25,7 +26,7 @@ class ExcerciseForm(ModelForm):
     class Meta:
         model = Excercise
         fields = '__all__'
-        exclude = ['workout','name']
+        exclude = ['workout','name','video','video_requests']
 
 class ProfileForm(ModelForm):
     class Meta:
